@@ -119,6 +119,7 @@ public abstract class Ator {
         
         return ITEM_NAO_ENCONTRADO;
     }
+    
     /**
      * Operation
      *
@@ -126,7 +127,7 @@ public abstract class Ator {
      * @return boolean
      */
     public Resultado coletarItem (Item item) {
-        if (bagagem.size() <= atributos.get(CAPACIDADE.posicao())) {
+        if (bagagem.size() <= atributos.get(CAPACIDADE)) {
             bagagem.add(item);
             return SUCESSO;
         }
@@ -141,14 +142,15 @@ public abstract class Ator {
     public Resultado usarHabilidade (Ator alvo) {
         return alvo.afetarOutroAtor(habilidade.getEfeitos(), alvo);
     }
+    
     /**
      * Operation
      *
      * @param 
      * @return boolean
      */
-    public Resultado afetarHP (int quantidade) {
-        int hp = atributos.get(HP.posicao());
+    private Resultado afetarHP (int quantidade) {
+        int hp = atributos.get(HP);
         if (hp > 0) {
             if (-quantidade < hp) {
                 hp += quantidade;
@@ -166,60 +168,72 @@ public abstract class Ator {
         } 
         return ATOR_IMORTAL;
     }
+    
     /**
      * Operation
      *
      * @param 
      * @return boolean
      */
-    public abstract Resultado afetarAtributo (int atributo, int quantidade);
-    /**
-     * Operation
-     *
-     * @param 
-     * @return boolean
-     */
-    public Resultado interagir ( Ator  )
-    {
-        // ## Implementation preserve start class method.interagir@boolean@@@Ator 
-        // ## Implementation preserve end class method.interagir@boolean@@@Ator 
+    private Resultado afetarHP (int quantidade) {
+        int hp = atributos.get(HP);
+        if (hp > 0) {
+            if (-quantidade < hp) {
+                hp += quantidade;
+                if (quantidade > 0) {
+                    return ATOR_CURADO;
+                } else {
+                    return ATOR_FERIDO;
+                }
+            } else {
+                hp = 0;
+                return ATOR_ASSASSINADO;
+            }
+        } else if (hp == 0) {
+            return ATOR_MORTO;
+        } 
+        return ATOR_IMORTAL;
     }
+    
+    /**
+     * Operation
+     *
+     * @param 
+     * @return boolean
+     */
+    public Resultado afetarAtributo (int atributo, int quantidade) {
+        if (atributo == HP) {
+            
+        } else if (atributo == CAPACIDADE) {
+            
+        }
+        return ATRIBUTO_NAO_APROPRIADO;
+    }
+    
     /**
      * Operation
      *
      * @return String
      */
     public String getStatus () {
-        int hp = atributos.get(HP.posicao());
-        int quantidadeDeItens = bagagem.size();
-        int capacidade = atributos.get(CAPACIDADE.posicao());
+        int hp = atributos.get(HP);
         
         String status = "";
         status += "Nome:          " + nome + ((hp == 0) ? (" (MORTO)") : ("")) + "\n";
-        status += "HP:            " + ((hp < 0) ? ("infinito") : (hp)) + "\n";
-        status += "Carga no inv.: " + quantidadeDeItens + "/" + capacidade + "\n";
         status += "Habilidade:    " + habilidade.getNome() + "\n";
+        status += "               " + getDescricaoHabilidade() + "\n";
+        status += "HP:            " + ((hp < 0) ? ("infinito") : (hp)) + "\n";
+        
         return status;
     }
+
     /**
      * Operation
      *
      * @return String
      */
-    public String getNome (  )
-    {
-        // ## Implementation preserve start class method.getNome@String@@ 
-        // ## Implementation preserve end class method.getNome@String@@ 
-    }
-    /**
-     * Operation
-     *
-     * @return int
-     */
-    public int getHP (  )
-    {
-        // ## Implementation preserve start class method.getHP@int@@ 
-        // ## Implementation preserve end class method.getHP@int@@ 
+    public String getNome () {
+        return nome;
     }
     
     /**
@@ -227,10 +241,13 @@ public abstract class Ator {
      *
      * @return int
      */
-    public int getCapacidade (  )
-    {
-        // ## Implementation preserve start class method.getHP@int@@ 
-        // ## Implementation preserve end class method.getHP@int@@ 
+    public int getAtributo (int atributo) {
+        if (atributo == HP) {
+            
+        } else if (atributo == CAPACIDADE) {
+            
+        }
+        return ATRIBUTO_NAO_ENCONTRADO;
     }
     
     /**
@@ -238,21 +255,29 @@ public abstract class Ator {
      *
      * @return String
      */
-    public String getDescricaoHabilidades (  )
-    {
-        // ## Implementation preserve start class method.getDescricaoHabilidades@String@@ 
-        // ## Implementation preserve end class method.getDescricaoHabilidades@String@@ 
+    public String getDescricaoHabilidade () {
+        return habilidade.getDescricao();
     }
+    
     /**
      * Operation
      *
      * @return String
      */
-    public String getListaItens (  )
-    {
-        // ## Implementation preserve start class method.getListaItens@String@@ 
-        // ## Implementation preserve end class method.getListaItens@String@@ 
+    public String getListaItens () {
+        int quantidadeDeItens = bagagem.size();
+        int capacidade = atributos.get(CAPACIDADE);
+        String lista = "Carga no inv.: " + quantidadeDeItens + "/" + capacidade + "\n";
+        if (quantidadeDeItens > 0) {
+            lista += "Itens:\n";
+            for (Item item : bagagem) {
+                lista += "       " + item.getNome() + "\n";
+            }
+        }
+        lista += "\n";
+        return lista;
     }
+    
     /**
      * Operation
      *
@@ -263,6 +288,7 @@ public abstract class Ator {
         // ## Implementation preserve start class method.getNomeHabilidade@String@@ 
         // ## Implementation preserve end class method.getNomeHabilidade@String@@ 
     }
+    
     /**
      * Operation
      *
@@ -273,6 +299,7 @@ public abstract class Ator {
         // ## Implementation preserve start class method.taVivo@boolean@@ 
         // ## Implementation preserve end class method.taVivo@boolean@@ 
     }
+    
     /**
      * Operation
      *
@@ -283,6 +310,7 @@ public abstract class Ator {
         // ## Implementation preserve start class method.ehAliado@boolean@@ 
         // ## Implementation preserve end class method.ehAliado@boolean@@ 
     }
+    
     // ## Implementation preserve start class other.operations. 
     // ## Implementation preserve end class other.operations. 
 }
